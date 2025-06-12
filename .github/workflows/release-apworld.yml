@@ -16,6 +16,11 @@ on:
         description: The path to the apworld folder
         required: true
         type: string
+      prerelease:
+        description: Optionally marks the release as a pre-release
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   package:
@@ -65,5 +70,6 @@ jobs:
         with:
           artifacts: '*'
           allowUpdates: true
+          prerelease: ${{ inputs.prerelease }}
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
