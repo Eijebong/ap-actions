@@ -4,14 +4,14 @@ inputs:
   path:
     description: The path to the apworld's folder in the repo
     required: true
-outputs:
-  apworld:
-    description: The name of the resulting apworld
-    value: ${{ steps.package.outputs.apworld }}
   checkout:
     description: Whether or not to run the checkout step. Can be useful to disable if you want to package the apworld with a dirty repo
     default: true
     required: true
+outputs:
+  apworld:
+    description: The name of the resulting apworld
+    value: ${{ steps.package.outputs.apworld }}
 runs:
   using: composite
   steps:
