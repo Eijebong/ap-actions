@@ -8,6 +8,10 @@ inputs:
     description: Whether or not to run the checkout step. Can be useful to disable if you want to package the apworld with a dirty repo
     default: true
     required: true
+  apworld-name:
+    description: The name of the apworld. This should only be set if the folder storing your apworld in the repository isn't the same
+    type: string
+    default: ""
 outputs:
   apworld:
     description: The name of the resulting apworld
@@ -23,10 +27,16 @@ runs:
       id: package
       shell: bash
       run: |
-        export APWORLD_NAME=$(basename "${APWORLD_FOLDER}")
-        export APWORLD_PARENT=$(dirname "${APWORLD_FOLDER}")
 
-        echo "apworld=${APWORLD_PARENT}/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
-        cd "${APWORLD_PARENT}" && zip -r "${APWORLD_NAME}.apworld" "${APWORLD_NAME}"
+        if [[ "${APWORLD_NAME}" == "" ]]; then
+          export APWORLD_NAME=$(basename "${APWORLD_FOLDER}")
+        fi
+
+        mkdir -p /tmp/ap-output/${APWORLD_NAME}
+
+        echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
+        cd "${APWORLD_FOLDER}" && rsync -ap --exclude .git * /tmp/ap-output/${APWORLD_NAME}/
+        cd /tmp/ap-output && zip -r "${APWORLD_NAME}.apworld" ${APWORLD_NAME}
       env:
         APWORLD_FOLDER: ${{ inputs.path }}
+        APWORLD_NAME: ${{ inputs.apworld-name }}

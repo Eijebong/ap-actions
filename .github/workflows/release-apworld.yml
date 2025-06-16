@@ -16,6 +16,9 @@ on:
         description: The path to the apworld folder
         required: true
         type: string
+      apworld-name:
+        description: The name of the apworld. This should only be set if the folder storing your apworld in the repository isn't the same
+        type: string
       prerelease:
         description: Optionally marks the release as a pre-release
         required: false
@@ -28,9 +31,10 @@ jobs:
     steps:
       - name: Create apworld
         id: apworld
-        uses: Eijebong/ap-actions/package-apworld@main
+        uses: Eijebong/ap-actions/package-apworld@dev
         with:
           path: ${{ inputs.apworld-path }}
+          apworld-name: ${{ inputs.apworld-name }}
 
       - uses: actions/upload-artifact@v4
         with:
@@ -40,10 +44,11 @@ jobs:
   template:
     runs-on: ubuntu-latest
     steps:
-      - uses: Eijebong/ap-actions/generate-template@main
+      - uses: Eijebong/ap-actions/generate-template@dev
         id: template
         with:
           apworld-path: ${{ inputs.apworld-path }}
+          apworld-name: ${{ inputs.apworld-name}}
           ap-version: ${{ inputs.ap-version }}
           python-version: ${{ inputs.python-version }}
 

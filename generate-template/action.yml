@@ -10,6 +10,10 @@ inputs:
   apworld-path:
     description: The path to the apworld folder
     required: true
+  apworld-name:
+    description: The name of the apworld. This should only be set if the folder storing your apworld in the repository isn't the same
+    type: string
+    default: ""
 outputs:
   template:
     description: The path to the generated template YAML
@@ -17,12 +21,13 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: Eijebong/ap-actions/package-apworld@main
+    - uses: Eijebong/ap-actions/package-apworld@dev
       id: package
       with:
         path: ${{ inputs.apworld-path }}
+        apworld-name: ${{ inputs.apworld-name }}
 
-    - uses: Eijebong/ap-actions/setup-ap@main
+    - uses: Eijebong/ap-actions/setup-ap@dev
       with:
         version: ${{ inputs.ap-version }}
         python-version: ${{ inputs.python-version }}
@@ -43,10 +48,14 @@ runs:
       id: generate
       shell: bash
       run: |
-        export APWORLD_NAME=$(basename ${APWORLD_PATH%.apworld})
+        if [[ "${APWORLD_NAME}" == "" ]]; then
+          export APWORLD_NAME=$(basename ${APWORLD_PATH%.apworld})
+        fi
+
         cd archipelago && uv run python generate_template.py ${APWORLD_NAME}
         # The script unloads every world except the targeted one so there's only ever one template in the folder
         export TEMPLATE_PATH="$(ls templates/)"
         echo "path=archipelago/templates/${TEMPLATE_PATH}" >> ${GITHUB_OUTPUT}
       env:
         APWORLD_PATH: ${{ inputs.apworld-path }}
+        APWORLD_NAME: ${{ inputs.apworld-name }}
