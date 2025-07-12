@@ -21,13 +21,13 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: Eijebong/ap-actions/package-apworld@main
+    - uses: ./package-apworld
       id: package
       with:
         path: ${{ inputs.apworld-path }}
         apworld-name: ${{ inputs.apworld-name }}
 
-    - uses: Eijebong/ap-actions/setup-ap@main
+    - uses: ./setup-ap
       with:
         version: ${{ inputs.ap-version }}
         python-version: ${{ inputs.python-version }}
