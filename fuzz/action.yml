@@ -8,7 +8,7 @@ inputs:
     description: The python version to use
     required: true
   apworld-path:
-    description: The path to the apworld folder
+    description: The path to the apworld folder or apworld itself
     required: true
   apworld-name:
     description: The name of the apworld. This should only be set if the folder storing your apworld in the repository isn't the same
@@ -33,7 +33,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: Eijebong/ap-actions/package-apworld@main
+    - uses: Eijebong/ap-actions/package-apworld@dev
       id: package
       with:
         path: ${{ inputs.apworld-path }}
@@ -62,14 +62,9 @@ runs:
     - name: Run fuzzer
       shell: bash
       run: |
-        if [[ "${APWORLD_NAME}" == "" ]]; then
-          export APWORLD_NAME=$(basename ${APWORLD_PATH%.apworld})
-        fi
-
         cd archipelago && uv run python fuzz.py -j 4 -g ${APWORLD_NAME} -r ${RUNS} -n ${YAMLS_PER_RUN}
       env:
-        APWORLD_PATH: ${{ steps.package.outputs.apworld }}
-        APWORLD_NAME: ${{ inputs.apworld-name }}
+        APWORLD_NAME: ${{ steps.package.outputs.apworld-name }}
         RUNS: ${{ inputs.runs }}
         YAMLS_PER_RUN: ${{ inputs.yamls-per-run }}
 

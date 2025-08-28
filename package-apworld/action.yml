@@ -2,7 +2,7 @@ name: Package apworld
 description: Package an apworld for distribution
 inputs:
   path:
-    description: The path to the apworld's folder in the repo
+    description: The path to the apworld's folder in the repo or apworld file itself
     required: true
   checkout:
     description: Whether or not to run the checkout step. Can be useful to disable if you want to package the apworld with a dirty repo
@@ -14,8 +14,11 @@ inputs:
     default: ""
 outputs:
   apworld:
-    description: The name of the resulting apworld
+    description: The path of the resulting apworld file
     value: ${{ steps.package.outputs.apworld }}
+  apworld-name:
+    description: The name of the apworld
+    value: ${{ steps.package.outputs.apworld-name }}
 runs:
   using: composite
   steps:
@@ -27,16 +30,26 @@ runs:
       id: package
       shell: bash
       run: |
-
         if [[ "${APWORLD_NAME}" == "" ]]; then
-          export APWORLD_NAME=$(basename "${APWORLD_FOLDER}")
+          if [[ "${APWORLD_PATH}" == *.apworld ]]; then
+            export APWORLD_NAME=$(basename "${APWORLD_PATH}" .apworld)
+          else
+            export APWORLD_NAME=$(basename "${APWORLD_PATH}")
+          fi
         fi
 
-        mkdir -p /tmp/ap-output/${APWORLD_NAME}
+        if [[ "${APWORLD_PATH}" == *.apworld ]]; then
+          mkdir -p /tmp/ap-output
+          cp "${APWORLD_PATH}" /tmp/ap-output/${APWORLD_NAME}.apworld
+          echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
+        else
+          mkdir -p /tmp/ap-output/${APWORLD_NAME}
+          echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
+          cd "${APWORLD_PATH}" && rsync -ap --exclude .git * /tmp/ap-output/${APWORLD_NAME}/
+          cd /tmp/ap-output && zip -r "${APWORLD_NAME}.apworld" ${APWORLD_NAME}
+        fi
 
-        echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
-        cd "${APWORLD_FOLDER}" && rsync -ap --exclude .git * /tmp/ap-output/${APWORLD_NAME}/
-        cd /tmp/ap-output && zip -r "${APWORLD_NAME}.apworld" ${APWORLD_NAME}
+        echo "apworld-name=${APWORLD_NAME}" >> ${GITHUB_OUTPUT}
       env:
-        APWORLD_FOLDER: ${{ inputs.path }}
+        APWORLD_PATH: ${{ inputs.path }}
         APWORLD_NAME: ${{ inputs.apworld-name }}
