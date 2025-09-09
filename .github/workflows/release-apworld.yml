@@ -24,11 +24,6 @@ on:
         required: false
         type: boolean
         default: false
-      immutable-create:
-        description: Indicates if immutable release creation should be used. When enabled, the action will first create a draft, upload artifacts, then publish the release
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   package:
@@ -81,6 +76,6 @@ jobs:
           artifacts: '*'
           allowUpdates: true
           prerelease: ${{ inputs.prerelease }}
-          immutableCreate: ${{ inputs.immutable-create }}
+          immutableCreate: true
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
