@@ -2,7 +2,7 @@ name: Setup archipelago
 description: Setup a base archipelago installation
 inputs:
   version:
-    description: The version of archipelago to use. This must match a refspec in the archipelago repository
+    description: The version of archipelago to use. This must either match a refspec in the archipelago repository or be 'latest' to match the latest stable release.
     required: true
   python-version:
     description: The python version to use
@@ -14,18 +14,27 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Get AP Tag
+      id: getAPtag
+      shell: bash
+      run: |
+        if [[ "${{ inputs.version }}" == "latest" ]]; then
+          echo "releasetag=$(curl -fsL -H "Authorization: Bearer ${{ github.token }}" https://api.github.com/repos/ArchipelagoMW/Archipelago/releases/latest | jq -r '.tag_name' )" >> $GITHUB_OUTPUT
+        else
+          echo "releasetag=${{ inputs.version }}" >> $GITHUB_OUTPUT
+        fi
     - name: Clone archipelago
       uses: actions/checkout@master
       id: clone
       with:
         repository: ArchipelagoMW/Archipelago
-        ref: ${{inputs.version}}
+        ref: ${{ steps.getAPtag.outputs.releasetag }}
         path: archipelago
     - name: Install uv
       uses: astral-sh/setup-uv@v6
       with:
         version: "latest"
-        python-version: ${{inputs.python-version}}
+        python-version: ${{ inputs.python-version }}
         enable-cache: true
     - name: Install dependencies
       shell: bash

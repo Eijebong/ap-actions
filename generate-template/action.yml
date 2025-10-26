@@ -2,7 +2,7 @@ name: Generate a template YAML for a given apworld
 description: Setup a base archipelago installation and generate a default template for the given apworld
 inputs:
   ap-version:
-    description: The version of archipelago to use. This must match a refspec in the archipelago repository
+    description: The version of archipelago to use. This must either match a refspec in the archipelago repository or be 'latest' to match the latest stable release.
     required: true
   python-version:
     description: The python version to use

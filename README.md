@@ -21,7 +21,7 @@ jobs:
       - uses: Eijebong/ap-actions/fuzz@main
         with:
           apworld-path: worlds/pokemon_crystal
-          ap-version: '0.6.1'
+          ap-version: '0.6.1' # Can also be "latest" to always get the latest, stable release of AP.
           python-version: '3.12'
           runs: 500 # This is optional
           yamls-per-run: 1 # This is optional
