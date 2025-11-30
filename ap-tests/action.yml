@@ -24,7 +24,7 @@ runs:
     - uses: actions/checkout@master
       if: ${{ inputs.checkout != 'false' }}
 
-    - uses: Eijebong/ap-actions/setup-ap@main
+    - uses: Eijebong/ap-actions/setup-ap@dev
       with:
         version: ${{ inputs.ap-version }}
         python-version: ${{ inputs.python-version }}
