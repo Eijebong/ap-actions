@@ -1,0 +1,24 @@
+name: Test-AP-Setup
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The version of archipelago to use. This must either match a refspec in the archipelago repository or be 'latest' to match the latest stable release.
+        required: true
+
+jobs:
+  Setup-AP:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "~3.12.6"
+        cache: pip
+    - name: Setup-AP-Check
+      uses: SomeJakeGuy/ap-actions/setup-ap@SJG-APInputVersion
+      with:
+        version: ${{ inputs.version }}
+        python-version: '3.12'

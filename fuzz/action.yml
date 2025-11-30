@@ -16,7 +16,7 @@ inputs:
     default: ""
   fuzzer-commit:
     description: The version of the fuzzer to use. It must be a valid commit in Eijebong/Archipelago-fuzzer
-    default: acc0a12309bdd9b5d58f97ab5c3cfb8bc258525e
+    default: bc563630a634f3f53f1975c9af7694db2efaee0d
     required: true
   runs:
     description: The number of generations to run
@@ -26,10 +26,18 @@ inputs:
     description: The number of YAMLs to use per generation
     default: 1
     required: true
+  meta:
+    description: Specify a meta file that overrides specific value
+    type: string
+    default: "meta.yaml"
+    required: true
   checkout:
     description: Whether or not to run the checkout step. Can be useful to disable if you want to run the fuzzer on a dirty repo
     default: true
     required: true
+  dump-ignored:
+    description: Dumps the ignored OptionErrors if desired
+    default: false
 runs:
   using: composite
   steps:
@@ -40,7 +48,7 @@ runs:
         apworld-name: ${{ inputs.apworld-name }}
         checkout: ${{ inputs.checkout }}
 
-    - uses: Eijebong/ap-actions/setup-ap@main
+    - uses: SomeJakeGuy/ap-actions/setup-ap@main
       with:
         version: ${{ inputs.ap-version }}
         python-version: ${{ inputs.python-version }}
@@ -62,11 +70,12 @@ runs:
     - name: Run fuzzer
       shell: bash
       run: |
-        cd archipelago && uv run python fuzz.py -j 4 -g ${APWORLD_NAME} -r ${RUNS} -n ${YAMLS_PER_RUN}
+          cd archipelago && uv run python fuzz.py -j 4 -g ${APWORLD_NAME} -r ${RUNS} -n ${YAMLS_PER_RUN} ${META:+-m $META} ${DUMP_IGNORED:+--dump-ignored}
       env:
         APWORLD_NAME: ${{ steps.package.outputs.apworld-name }}
         RUNS: ${{ inputs.runs }}
         YAMLS_PER_RUN: ${{ inputs.yamls-per-run }}
+        META: ${{ inputs.meta }}
 
     - name: Upload fuzzer failures
       if: failure()
