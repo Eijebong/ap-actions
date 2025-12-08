@@ -32,10 +32,11 @@ jobs:
     steps:
       - name: Create apworld
         id: apworld
-        uses: Eijebong/ap-actions/package-apworld@main
+        uses: gerbiljames/ap-actions/package-apworld@standard-build-apworld
         with:
           path: ${{ inputs.apworld-path }}
           apworld-name: ${{ inputs.apworld-name }}
+          ap-version: ${{ inputs.ap-version }}
 
       - uses: actions/upload-artifact@v4
         with:
