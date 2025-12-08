@@ -52,9 +52,9 @@ runs:
           echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
         else
           echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
-          mv "${APWORLD_PATH}" archipelago/worlds/${APWORLD_NAME}
+          cp "${APWORLD_PATH}" archipelago/worlds/${APWORLD_NAME}
           cd archipelago && uv run python Launcher.py "Build APWorlds"
-          mv "build/apworlds/${APWORLD_NAME}.apworld" "/tmp/ap-output/${APWORLD_NAME}.apworld"
+          mv "archipelago/build/apworlds/${APWORLD_NAME}.apworld" "/tmp/ap-output/${APWORLD_NAME}.apworld"
         fi
 
         echo "apworld-name=${APWORLD_NAME}" >> ${GITHUB_OUTPUT}
