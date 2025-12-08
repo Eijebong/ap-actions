@@ -46,15 +46,14 @@ runs:
           fi
         fi
 
+        mkdir -p /tmp/ap-output
+        echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
+
         if [[ "${APWORLD_PATH}" == *.apworld ]]; then
-          mkdir -p /tmp/ap-output
           cp "${APWORLD_PATH}" /tmp/ap-output/${APWORLD_NAME}.apworld
-          echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
         else
-          echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
           cp -r "${APWORLD_PATH}" archipelago/worlds/${APWORLD_NAME}
           cd archipelago && uv run python Launcher.py "Build APWorlds"
-          ls build/apworlds/
           mv "build/apworlds/${APWORLD_NAME}.apworld" "/tmp/ap-output/${APWORLD_NAME}.apworld"
         fi
 
