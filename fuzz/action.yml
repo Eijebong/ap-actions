@@ -30,6 +30,11 @@ inputs:
     description: Whether or not to run the checkout step. Can be useful to disable if you want to run the fuzzer on a dirty repo
     default: true
     required: true
+  meta:
+    description: Specify a meta file that overrides specific values for the options provided.
+  dump-ignored:
+    description: Dumps the ignored OptionErrors if desired
+    default: false
 runs:
   using: composite
   steps:
@@ -62,11 +67,13 @@ runs:
     - name: Run fuzzer
       shell: bash
       run: |
-        cd archipelago && uv run python fuzz.py -j 4 -g ${APWORLD_NAME} -r ${RUNS} -n ${YAMLS_PER_RUN}
+        cd archipelago && uv run python fuzz.py -j 4 -g ${APWORLD_NAME} -r ${RUNS} -n ${YAMLS_PER_RUN} ${META:+-m $META} ${DUMP_IGNORED}
       env:
         APWORLD_NAME: ${{ steps.package.outputs.apworld-name }}
         RUNS: ${{ inputs.runs }}
         YAMLS_PER_RUN: ${{ inputs.yamls-per-run }}
+        META: ${{ inputs.meta }}
+        DUMP_IGNORED: ${{ inputs.dump-ignored == 'true' && '--dump-ignored' || '' }}
 
     - name: Upload fuzzer failures
       if: failure()
