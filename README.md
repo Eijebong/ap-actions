@@ -25,6 +25,8 @@ jobs:
           python-version: '3.12'
           runs: 500 # This is optional
           yamls-per-run: 1 # This is optional
+          meta: path-to-meta.yaml # This is optional
+          dump-ignored: false # This is optional
 ```
 
 ## `Eijebong/ap-actions/ap-tests`
