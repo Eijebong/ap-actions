@@ -28,8 +28,8 @@ world_name = world_name_from_apworld_name(apworld_name)
 # Unload as many worlds as possible before running tests
 loaded_worlds = list(AutoWorldRegister.world_types.keys())
 for loaded_world in loaded_worlds:
-    # Those 2 worlds are essential to testing, don't unload them. Hopefully in the future ALTTP can get yeeted from here too.
-    if loaded_world in ("Test Game", "A Link to the Past"):
+    # Those 3 worlds are essential to testing, don't unload them. Hopefully in the future ALTTP can get yeeted from here too.
+    if loaded_world in ("Test Game", "A Link to the Past", "APQuest"):
         continue
 
     if loaded_world != world_name:
