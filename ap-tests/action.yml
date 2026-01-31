@@ -3,6 +3,7 @@ description: Setup a base archipelago installation and run tests for the given a
 inputs:
   ap-version:
     description: The version of archipelago to use. This must either match a refspec in the archipelago repository or be 'latest' to match the latest stable release.
+    default: "latest"
     required: true
   python-version:
     description: The python version to use
@@ -29,34 +30,10 @@ runs:
         version: ${{ inputs.ap-version }}
         python-version: ${{ inputs.python-version }}
 
-    - name: Determine apworld name
-      shell: bash
-      run: |
-        if [[ "${APWORLD_NAME}" == "" ]]; then
-          if [[ "${APWORLD_PATH}" == *.apworld ]]; then
-            echo "APWORLD_NAME=$(basename "${APWORLD_PATH}" .apworld)" >> $GITHUB_ENV
-          else
-            echo "APWORLD_NAME=$(basename "${APWORLD_PATH}")" >> $GITHUB_ENV
-          fi
-        else
-          echo "APWORLD_NAME=${APWORLD_NAME}" >> $GITHUB_ENV
-        fi
-      env:
-        APWORLD_PATH: ${{ inputs.apworld-path }}
-        APWORLD_NAME: ${{ inputs.apworld-name }}
-
-    - name: Copy apworld in worlds
-      shell: bash
-      run: |
-        if [[ "${APWORLD_PATH}" == *.apworld ]]; then
-          unzip -q "${APWORLD_PATH}" -d archipelago/worlds/
-        else
-          mkdir -p archipelago/worlds/${APWORLD_NAME}
-          rsync --exclude archipelago --exclude .git -ap ${APWORLD_PATH}/* archipelago/worlds/${APWORLD_NAME}
-        fi
-
-      env:
-        APWORLD_PATH: ${{ inputs.apworld-path }}
+    - uses: Eijebong/ap-actions/copy-apworld-source@main
+      with:
+        apworld-path: ${{ inputs.apworld-path }}
+        apworld-name: ${{ inputs.apworld-name }}
 
     - name: Copy test runner
       shell: bash

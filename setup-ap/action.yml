@@ -3,6 +3,7 @@ description: Setup a base archipelago installation
 inputs:
   version:
     description: The version of archipelago to use. This must either match a refspec in the archipelago repository or be 'latest' to match the latest stable release.
+    default: "latest"
     required: true
   python-version:
     description: The python version to use
