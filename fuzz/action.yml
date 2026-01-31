@@ -39,7 +39,6 @@ inputs:
 runs:
   using: composite
   steps:
-
     - uses: actions/checkout@master
       if: ${{ inputs.checkout != 'false' }}
 
