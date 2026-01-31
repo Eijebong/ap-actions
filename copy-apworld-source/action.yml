@@ -6,11 +6,9 @@ inputs:
     required: true
   apworld-name:
     description: The name of the APWorld. This should only be set if the folder storing your apworld in the repository isn't the same
-    type: string
     default: ""
   destination:
     description: The destination to copy the APWorld source to
-    type: string
     default: "archipelago/worlds"
 outputs:
   apworld-name:
