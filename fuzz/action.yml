@@ -40,6 +40,9 @@ runs:
   using: composite
   steps:
 
+    - uses: actions/checkout@master
+      if: ${{ inputs.checkout != 'false' }}
+
     - uses: gerbiljames/ap-actions/setup-ap@copy-apworld-source
       with:
         version: ${{ inputs.ap-version }}
