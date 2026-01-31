@@ -51,7 +51,7 @@ runs:
       id: copy
       with:
         apworld-path: ${{ inputs.apworld-path }}
-        apworld-name: ${{ inputs.apworld.name }}
+        apworld-name: ${{ inputs.apworld-name }}
 
     - name: Get fuzzer
       shell: bash
