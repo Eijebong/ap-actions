@@ -10,8 +10,15 @@ inputs:
     required: true
   apworld-name:
     description: The name of the apworld. This should only be set if the folder storing your apworld in the repository isn't the same
-    type: string
     default: ""
+  ap-version:
+    description: The version of archipelago to use. This must match a refspec in the archipelago repository
+    default: "latest"
+    required: true
+  python-version:
+    description: The python version to use
+    default: "3.12"
+    required: true
 outputs:
   apworld:
     description: The path of the resulting apworld file
@@ -26,6 +33,11 @@ runs:
       uses: actions/checkout@master
       if: ${{ inputs.checkout != 'false' }}
 
+    - uses: Eijebong/ap-actions/setup-ap@main
+      with:
+        version: ${{ inputs.ap-version }}
+        python-version: ${{ inputs.python-version }}
+
     - name: Package apworld
       id: package
       shell: bash
@@ -38,15 +50,15 @@ runs:
           fi
         fi
 
+        mkdir -p /tmp/ap-output
+        echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
+
         if [[ "${APWORLD_PATH}" == *.apworld ]]; then
-          mkdir -p /tmp/ap-output
           cp "${APWORLD_PATH}" /tmp/ap-output/${APWORLD_NAME}.apworld
-          echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
         else
-          mkdir -p /tmp/ap-output/${APWORLD_NAME}
-          echo "apworld=/tmp/ap-output/${APWORLD_NAME}.apworld" >> ${GITHUB_OUTPUT}
-          cd "${APWORLD_PATH}" && rsync -ap --exclude .git * /tmp/ap-output/${APWORLD_NAME}/
-          cd /tmp/ap-output && zip -r "${APWORLD_NAME}.apworld" ${APWORLD_NAME}
+          cp -r "${APWORLD_PATH}" archipelago/worlds/${APWORLD_NAME}
+          cd archipelago && uv run python Launcher.py "Build APWorlds"
+          mv "build/apworlds/${APWORLD_NAME}.apworld" "/tmp/ap-output/${APWORLD_NAME}.apworld"
         fi
 
         echo "apworld-name=${APWORLD_NAME}" >> ${GITHUB_OUTPUT}
