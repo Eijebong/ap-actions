@@ -31,6 +31,7 @@ runs:
         python-version: ${{ inputs.python-version }}
 
     - uses: Eijebong/ap-actions/copy-apworld-source@main
+      id: copy
       with:
         apworld-path: ${{ inputs.apworld-path }}
         apworld-name: ${{ inputs.apworld-name }}
@@ -44,3 +45,6 @@ runs:
       shell: bash
       run: |
         cd archipelago && uv run python run_tests.py ${APWORLD_NAME}
+      env:
+        APWORLD_NAME: ${{ steps.copy.outputs.apworld-name }}
+
