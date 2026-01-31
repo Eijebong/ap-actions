@@ -9,11 +9,12 @@ inputs:
     default: true
     required: true
   apworld-name:
-    description: The name of the apworld.
-    type: string
+    description: The name of the apworld. This should only be set if the folder storing your apworld in the repository isn't the same
+    default: ""
     required: true
   ap-version:
     description: The version of archipelago to use. This must match a refspec in the archipelago repository
+    default: "latest"
     required: true
 outputs:
   apworld:
@@ -60,4 +61,4 @@ runs:
         echo "apworld-name=${APWORLD_NAME}" >> ${GITHUB_OUTPUT}
       env:
         APWORLD_PATH: ${{ inputs.path }}
-        APWORLD_NAME: ${{ inputs.apworld-name }}
+        APWORLD_NAME: ${{ steps.copy.output.apworld-name }}
