@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Create apworld
         id: apworld
-        uses: gerbiljames/ap-actions/package-apworld@standard-build-apworld
+        uses: Eijebong/ap-actions/package-apworld@main
         with:
           path: ${{ inputs.apworld-path }}
           apworld-name: ${{ inputs.apworld-name }}
