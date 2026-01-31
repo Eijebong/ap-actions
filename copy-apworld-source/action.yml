@@ -25,12 +25,12 @@ runs:
       run: |
         if [[ "${APWORLD_NAME}" == "" ]]; then
           if [[ "${APWORLD_PATH}" == *.apworld ]]; then
-            echo "APWORLD_NAME=$(basename "${APWORLD_PATH}" .apworld)" >> $GITHUB_ENV
+            echo "apworld-name=$(basename "${APWORLD_PATH}" .apworld)" >> $GITHUB_OUTPUT
           else
-            echo "APWORLD_NAME=$(basename "${APWORLD_PATH}")" >> $GITHUB_ENV
+            echo "apworld-name=$(basename "${APWORLD_PATH}")" >> $GITHUB_OUTPUT
           fi
         else
-          echo "APWORLD_NAME=${APWORLD_NAME}" >> $GITHUB_ENV
+          echo "apworld-name=${APWORLD_NAME}" >> $GITHUB_OUTPUT
         fi
       env:
         APWORLD_PATH: ${{ inputs.apworld-path }}
@@ -48,4 +48,5 @@ runs:
 
       env:
         APWORLD_PATH: ${{ inputs.apworld-path }}
+        APWORLD_NAME: ${{steps.name.outputs.apworld-name}}
         DESTINATION: ${{ inputs.destination }}
