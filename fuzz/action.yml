@@ -48,6 +48,7 @@ runs:
         python-version: ${{ inputs.python-version }}
 
     - uses: gerbiljames/ap-actions/copy-apworld-source@copy-apworld-source
+      id: copy
       with:
         apworld-path: ${{ inputs.apworld-path }}
         apworld-name: ${{ inputs.apworld.name }}
@@ -64,7 +65,7 @@ runs:
       run: |
         cd archipelago && uv run python fuzz.py -j 4 -g ${APWORLD_NAME} -r ${RUNS} -n ${YAMLS_PER_RUN} ${META:+-m $META} ${DUMP_IGNORED}
       env:
-        APWORLD_NAME: ${{ steps.package.outputs.apworld-name }}
+        APWORLD_NAME: ${{ steps.copy.outputs.apworld-name }}
         RUNS: ${{ inputs.runs }}
         YAMLS_PER_RUN: ${{ inputs.yamls-per-run }}
         META: ${{ inputs.meta }}

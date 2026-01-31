@@ -35,6 +35,7 @@ runs:
         python-version: ${{ inputs.python-version }}
 
     - uses: gerbiljames/ap-actions/copy-apworld-source@copy-apworld-source
+      id: copy
       with:
         apworld-path: ${{ inputs.apworld-path }}
         apworld-name: ${{ inputs.apworld-name }}
@@ -53,4 +54,4 @@ runs:
         export TEMPLATE_PATH="$(ls templates/)"
         echo "path=archipelago/templates/${TEMPLATE_PATH}" >> ${GITHUB_OUTPUT}
       env:
-        APWORLD_NAME: ${{ steps.package.outputs.apworld-name }}
+        APWORLD_NAME: ${{ steps.copy.outputs.apworld-name }}
