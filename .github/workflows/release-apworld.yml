@@ -37,6 +37,7 @@ jobs:
           path: ${{ inputs.apworld-path }}
           apworld-name: ${{ inputs.apworld-name }}
           ap-version: ${{ inputs.ap-version }}
+          python-version: ${{ inputs.python-version }}
 
       - uses: actions/upload-artifact@v4
         with:
