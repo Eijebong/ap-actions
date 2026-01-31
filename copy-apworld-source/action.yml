@@ -12,10 +12,15 @@ inputs:
     description: The destination to copy the APWorld source to
     type: string
     default: "archipelago/worlds"
+outputs:
+  apworld-name:
+    description: The resolved name of the APWorld
+    value: ${{ steps.name.outputs.APWORLD_NAME }}
 runs:
   using: composite
   steps:
     - name: Determine apworld name
+      id: name
       shell: bash
       run: |
         if [[ "${APWORLD_NAME}" == "" ]]; then
