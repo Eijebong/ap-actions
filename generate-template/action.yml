@@ -3,6 +3,7 @@ description: Setup a base archipelago installation and generate a default templa
 inputs:
   ap-version:
     description: The version of archipelago to use. This must either match a refspec in the archipelago repository or be 'latest' to match the latest stable release.
+    default: "latest"
     required: true
   python-version:
     description: The python version to use
@@ -25,24 +26,15 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: Eijebong/ap-actions/package-apworld@main
-      id: package
-      with:
-        path: ${{ inputs.apworld-path }}
-        apworld-name: ${{ inputs.apworld-name }}
-        checkout: ${{ inputs.checkout }}
-
-    - uses: Eijebong/ap-actions/setup-ap@main
+    - uses: gerbiljames/ap-actions/setup-ap@copy-apworld-source
       with:
         version: ${{ inputs.ap-version }}
         python-version: ${{ inputs.python-version }}
 
-    - name: Copy apworld in custom worlds
-      shell: bash
-      run: |
-        cp ${APWORLD_PATH} archipelago/custom_worlds/
-      env:
-        APWORLD_PATH: ${{ steps.package.outputs.apworld }}
+    - uses: gerbiljames/ap-actions/copy-apworld-source@copy-apworld-source
+      with:
+        apworld-path: ${{ inputs.apworld-path }}
+        apworld-name: ${{ inputs.apworld-name }}
 
     - name: Copy template generator
       shell: bash

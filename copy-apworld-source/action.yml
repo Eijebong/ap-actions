@@ -1,0 +1,46 @@
+name: Copy APWorld source
+description: Copies APWorld source to a given destination
+inputs:
+  apworld-path:
+    description: The path to the APWorld folder or APWorld itself
+    required: true
+  apworld-name:
+    description: The name of the APWorld. This should only be set if the folder storing your apworld in the repository isn't the same
+    type: string
+    default: ""
+  destination:
+    description: The destination to copy the APWorld source to
+    type: string
+    default: "archipelago/worlds"
+runs:
+  using: composite
+  steps:
+    - name: Determine apworld name
+      shell: bash
+      run: |
+        if [[ "${APWORLD_NAME}" == "" ]]; then
+          if [[ "${APWORLD_PATH}" == *.apworld ]]; then
+            echo "APWORLD_NAME=$(basename "${APWORLD_PATH}" .apworld)" >> $GITHUB_ENV
+          else
+            echo "APWORLD_NAME=$(basename "${APWORLD_PATH}")" >> $GITHUB_ENV
+          fi
+        else
+          echo "APWORLD_NAME=${APWORLD_NAME}" >> $GITHUB_ENV
+        fi
+      env:
+        APWORLD_PATH: ${{ inputs.apworld-path }}
+        APWORLD_NAME: ${{ inputs.apworld-name }}
+
+    - name: Copy apworld in worlds
+      shell: bash
+      run: |
+        if [[ "${APWORLD_PATH}" == *.apworld ]]; then
+          unzip -q "${APWORLD_PATH}" -d ${DESTINATION}/
+        else
+          mkdir -p ${DESTINATION}/${APWORLD_NAME}
+          rsync --exclude archipelago --exclude .git -ap ${APWORLD_PATH}/* ${DESTINATION}/${APWORLD_NAME}
+        fi
+
+      env:
+        APWORLD_PATH: ${{ inputs.apworld-path }}
+        DESTINATION: $ {{ inputs.destination }}
