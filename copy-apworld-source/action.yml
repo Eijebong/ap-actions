@@ -43,4 +43,4 @@ runs:
 
       env:
         APWORLD_PATH: ${{ inputs.apworld-path }}
-        DESTINATION: $ {{ inputs.destination }}
+        DESTINATION: ${{ inputs.destination }}
