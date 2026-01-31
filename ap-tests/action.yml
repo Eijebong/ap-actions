@@ -25,12 +25,12 @@ runs:
     - uses: actions/checkout@master
       if: ${{ inputs.checkout != 'false' }}
 
-    - uses: gerbiljames/ap-actions/setup-ap@copy-apworld-source
+    - uses: Eijebong/ap-actions/setup-ap@main
       with:
         version: ${{ inputs.ap-version }}
         python-version: ${{ inputs.python-version }}
 
-    - uses: gerbiljames/ap-actions/copy-apworld-source@copy-apworld-source
+    - uses: Eijebong/ap-actions/copy-apworld-source@main
       with:
         apworld-path: ${{ inputs.apworld-path }}
         apworld-name: ${{ inputs.apworld-name }}
