@@ -61,4 +61,4 @@ runs:
         echo "apworld-name=${APWORLD_NAME}" >> ${GITHUB_OUTPUT}
       env:
         APWORLD_PATH: ${{ inputs.path }}
-        APWORLD_NAME: ${{ steps.copy.output.apworld-name }}
+        APWORLD_NAME: ${{ inputs.apworld-name }}
