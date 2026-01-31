@@ -17,6 +17,7 @@ inputs:
     required: true
   python-version:
     description: The python version to use
+    default: "3.12"
     required: true
 outputs:
   apworld:

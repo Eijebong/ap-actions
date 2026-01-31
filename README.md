@@ -80,5 +80,5 @@ jobs:
       python-version: '3.12'
 ```
 
-> [!NOTE]
+> [!NOTE]type: string
 > This requires the workflow to have write access to the repository. Make sure `Settings > Actions > General > Workflow permissions` is set to `Read and write permissions`.
