@@ -51,7 +51,7 @@ runs:
       run: |
         cd archipelago && uv run python generate_template.py ${APWORLD_NAME}
         # The script unloads every world except the targeted one so there's only ever one template in the folder
-        export TEMPLATE_PATH="$(ls templates/*.yaml)"
+        export TEMPLATE_PATH="$(cd templates && ls *.yaml)"
         echo "path=archipelago/templates/${TEMPLATE_PATH}" >> ${GITHUB_OUTPUT}
       env:
         APWORLD_NAME: ${{ steps.copy.outputs.apworld-name }}
