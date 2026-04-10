@@ -17,7 +17,7 @@ inputs:
     default: ""
   fuzzer-commit:
     description: The version of the fuzzer to use. It must be a valid commit in Eijebong/Archipelago-fuzzer
-    default: acc0a12309bdd9b5d58f97ab5c3cfb8bc258525e
+    default: 718106c3a345e65614f147e3210a15e71ee3cfb6
     required: true
   runs:
     description: The number of generations to run
